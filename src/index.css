@@ -1,0 +1,205 @@
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow-condensed/600.css';
+@import '@fontsource/barlow-condensed/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/600.css';
+@import 'tailwindcss';
+
+/* ── palette: thermal label on warehouse concrete ───────────────────── */
+:root {
+  --c-bg: #e9eae6; /* concrete floor */
+  --c-surface: #ffffff; /* label white */
+  --c-surface-dim: #f4f4f1;
+  --c-ink: #16181d; /* thermal black */
+  --c-ink-mut: #5c6069;
+  --c-line: #d2d3ce;
+  --c-accent: #ee4d1e; /* packing-tape safety orange */
+  --c-accent-ink: #ffffff;
+  --c-priority: #1c4fd8; /* USPS priority blue */
+  --c-ground: #7a5c34; /* kraft brown */
+  --c-ok: #1d7a3f; /* picked green */
+  --c-warn-bg: #fff3ec;
+  --c-tape: rgba(238, 77, 30, 0.16);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-bg: #14161a; /* night shift */
+    --c-surface: #1f2228;
+    --c-surface-dim: #24272e;
+    --c-ink: #eeefeb;
+    --c-ink-mut: #9aa0ab;
+    --c-line: #34383f;
+    --c-accent: #ff5c2a;
+    --c-accent-ink: #16181d;
+    --c-priority: #6f95ff;
+    --c-ground: #c9a06a;
+    --c-ok: #4cc077;
+    --c-warn-bg: #33221a;
+    --c-tape: rgba(255, 92, 42, 0.22);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-dim: var(--c-surface-dim);
+  --color-ink: var(--c-ink);
+  --color-ink-mut: var(--c-ink-mut);
+  --color-line: var(--c-line);
+  --color-accent: var(--c-accent);
+  --color-accent-ink: var(--c-accent-ink);
+  --color-priority: var(--c-priority);
+  --color-ground: var(--c-ground);
+  --color-ok: var(--c-ok);
+  --color-warn-bg: var(--c-warn-bg);
+  --font-display: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
+  --font-body: 'Barlow', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+html {
+  background: var(--c-bg);
+}
+body {
+  font-family: var(--font-body);
+  color: var(--c-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* display face needs wider tracking at small sizes */
+.eyebrow {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--c-ink-mut);
+}
+
+/* ── signature: packing-tape stripe across a completed order card ───── */
+.tape-stripe {
+  position: absolute;
+  inset: 50% -12% auto;
+  transform: translateY(-50%) rotate(-4deg);
+  padding: 0.4rem 0;
+  background: var(--c-tape);
+  border-top: 1px dashed var(--c-accent);
+  border-bottom: 1px dashed var(--c-accent);
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  pointer-events: none;
+  animation: tape-in 240ms ease-out;
+}
+@keyframes tape-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) rotate(-4deg) scaleX(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) rotate(-4deg) scaleX(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tape-stripe {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* big touch checkboxes for iPad picking */
+.pick-check {
+  appearance: none;
+  width: 1.7rem;
+  height: 1.7rem;
+  flex: none;
+  border: 2px solid var(--c-ink-mut);
+  border-radius: 4px;
+  background: var(--c-surface);
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  transition: border-color 120ms, background 120ms;
+}
+.pick-check:checked {
+  border-color: var(--c-ok);
+  background: var(--c-ok);
+}
+.pick-check:checked::after {
+  content: '';
+  width: 0.55rem;
+  height: 0.95rem;
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg) translateY(-2px);
+}
+.pick-check:focus-visible {
+  outline: 3px solid var(--c-accent);
+  outline-offset: 2px;
+}
+
+/* inline-editable table inputs disappear into the row until focused */
+.cell-input {
+  width: 100%;
+  min-width: 3rem;
+  background: transparent;
+  padding: 0.55rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+.cell-input:hover {
+  border-color: var(--c-line);
+}
+.cell-input:focus {
+  outline: none;
+  border-color: var(--c-accent);
+  background: var(--c-surface);
+}
+
+/* ── print: clean pick tickets ──────────────────────────────────────── */
+#print-root {
+  display: none;
+}
+@media print {
+  #app-root {
+    display: none;
+  }
+  #print-root {
+    display: block;
+  }
+  html,
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .print-order {
+    break-inside: avoid;
+    padding: 12px 0 16px;
+    border-bottom: 2px dashed #999; /* serrated ticket edge */
+  }
+  .print-order:last-child {
+    border-bottom: none;
+  }
+  .print-slip {
+    break-after: page;
+    padding: 24px 8px;
+  }
+  .print-checkbox {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 1.5px solid #000;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: -1px;
+  }
+}

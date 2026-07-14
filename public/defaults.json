@@ -1,0 +1,13 @@
+{
+  "note": "Seed data loaded on first visit when the toy catalog is empty. Dimensions in inches, weight in oz. Update in the app, export JSON, and commit back here to sync devices.",
+  "toys": [
+    { "id": "seed-1", "product": "NeeDoh gumdrop", "l": 2.5, "w": 2.5, "h": 2.5, "weightOz": 3, "note": "estimate — verify" },
+    { "id": "seed-2", "product": "NeeDoh Nice-cube", "l": 2.5, "w": 2.5, "h": 2.5, "weightOz": 4, "note": "estimate — verify" },
+    { "id": "seed-3", "product": "NeeDoh mini Nice-cube", "l": 1.5, "w": 1.5, "h": 1.5, "weightOz": 1.5, "note": "estimate — verify" },
+    { "id": "seed-4", "product": "NeeDoh Mini cube 4-pack", "l": 6, "w": 4.5, "h": 1.5, "weightOz": 6, "note": "estimate — verify" },
+    { "id": "seed-5", "product": "NeeDoh gummy bear", "l": 3, "w": 2, "h": 4, "weightOz": 4, "note": "estimate — verify" },
+    { "id": "seed-6", "product": "Medium size Butter squishy", "l": 3, "w": 3, "h": 2, "weightOz": 2, "note": "estimate — verify" },
+    { "id": "seed-7", "product": "Large size Butter squishy", "l": 4, "w": 4, "h": 2.5, "weightOz": 3, "note": "estimate — verify" },
+    { "id": "seed-8", "product": "GIVEAWAY", "l": 2, "w": 2, "h": 2, "weightOz": 2, "note": "estimate — verify" }
+  ]
+}
