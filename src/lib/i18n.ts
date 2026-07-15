@@ -58,6 +58,16 @@ const dict = {
   colorCol: { en: 'Variant', zh: '颜色/款' },
   qtyCol: { en: 'Qty', zh: '数量' },
   inOrdersCol: { en: 'In # orders', zh: '出现单数' },
+  costEachCol: { en: 'Cost/ea', zh: '成本/个' },
+  revenueCol: { en: 'Revenue', zh: '销售额' },
+  costTotalCol: { en: 'Cost', zh: '成本小计' },
+  profitCol: { en: 'Profit', zh: '利润' },
+  grandTotal: { en: 'Grand total', zh: '合计' },
+  costHint: {
+    en: 'Cost per unit is saved to the toy catalog (color variants share it), so it sticks for the next show.',
+    zh: '成本按产品保存进玩具库（同款不同色共用），下一场直接复用。',
+  },
+  autoSaved: { en: 'All edits auto-save to this browser', zh: '所有编辑自动保存在本浏览器' },
 
   // catalog page
   toyTableTitle: { en: 'Toy dimensions', zh: '玩具尺寸库' },

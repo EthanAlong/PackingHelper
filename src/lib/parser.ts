@@ -296,20 +296,27 @@ export function groupItems(items: OrderItem[]) {
   return list
 }
 
-/** Whole-show totals per product+color */
+/** Whole-show totals per product+color; revenue = sum of line subtotals */
 export function skuTotals(orders: ParsedOrder[]) {
   const totals = new Map<
     string,
-    { product: string; color: string; count: number; orderCount: number }
+    { product: string; color: string; count: number; orderCount: number; revenue: number }
   >()
   for (const o of orders) {
     const seen = new Set<string>()
     for (const it of o.items) {
       const key = `${it.product} ${it.color}`.toLowerCase()
       if (!totals.has(key))
-        totals.set(key, { product: it.product, color: it.color, count: 0, orderCount: 0 })
+        totals.set(key, {
+          product: it.product,
+          color: it.color,
+          count: 0,
+          orderCount: 0,
+          revenue: 0,
+        })
       const t = totals.get(key)!
       t.count += it.qty
+      if (Number.isFinite(it.price)) t.revenue += it.price
       if (!seen.has(key)) {
         t.orderCount++
         seen.add(key)

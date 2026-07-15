@@ -57,6 +57,8 @@ export interface CatalogEntry {
   w: number
   h: number
   weightOz: number
+  /** what one unit costs you — used for the profit sheet on the Totals tab */
+  costEach?: number
   note: string
 }
 

@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useT } from '../lib/i18n'
 import { useBoxes, useCatalog, useSession, useSettings, uid } from '../store'
-import { Btn, Section } from '../components/ui'
+import { Btn, NumCell, Section } from '../components/ui'
 import type { BoxType, CatalogEntry } from '../lib/types'
 
 function downloadJson(name: string, data: unknown) {
@@ -41,11 +41,6 @@ function JsonImportBtn<T>({ label, onLoad }: { label: string; onLoad: (data: T) 
   )
 }
 
-const num = (v: string) => {
-  const n = parseFloat(v)
-  return Number.isFinite(n) && n >= 0 ? n : 0
-}
-
 export default function CatalogPage() {
   const t = useT()
   const catalog = useCatalog()
@@ -65,7 +60,16 @@ export default function CatalogPage() {
           <>
             <Btn
               onClick={() =>
-                catalog.upsert({ id: uid(), product: '', l: 0, w: 0, h: 0, weightOz: 0, note: '' })
+                catalog.upsert({
+                  id: uid(),
+                  product: '',
+                  l: 0,
+                  w: 0,
+                  h: 0,
+                  weightOz: 0,
+                  costEach: 0,
+                  note: '',
+                })
               }
             >
               {t('addRow')}
@@ -89,6 +93,7 @@ export default function CatalogPage() {
                 <th className="eyebrow w-20 px-2 py-2.5">{t('wCol')}</th>
                 <th className="eyebrow w-20 px-2 py-2.5">{t('hCol')}</th>
                 <th className="eyebrow w-20 px-2 py-2.5">{t('weightCol')}</th>
+                <th className="eyebrow w-20 px-2 py-2.5">{t('costEachCol')}</th>
                 <th className="eyebrow px-2 py-2.5">{t('noteCol')}</th>
                 <th className="w-12" />
               </tr>
@@ -110,14 +115,11 @@ export default function CatalogPage() {
                         onChange={(ev) => catalog.update(e.id, { product: ev.target.value })}
                       />
                     </td>
-                    {(['l', 'w', 'h', 'weightOz'] as const).map((k) => (
+                    {(['l', 'w', 'h', 'weightOz', 'costEach'] as const).map((k) => (
                       <td key={k}>
-                        <input
-                          className="cell-input font-mono"
-                          inputMode="decimal"
-                          value={e[k] || ''}
-                          placeholder="0"
-                          onChange={(ev) => catalog.update(e.id, { [k]: num(ev.target.value) })}
+                        <NumCell
+                          value={e[k] ?? 0}
+                          onCommit={(v) => catalog.update(e.id, { [k]: v ?? 0 })}
                         />
                       </td>
                     ))}
@@ -191,26 +193,17 @@ export default function CatalogPage() {
                   </td>
                   {(['l', 'w', 'h'] as const).map((k) => (
                     <td key={k}>
-                      <input
-                        className="cell-input font-mono"
-                        inputMode="decimal"
-                        value={b[k] || ''}
-                        placeholder="0"
-                        onChange={(ev) => boxes.update(b.id, { [k]: num(ev.target.value) })}
+                      <NumCell
+                        value={b[k]}
+                        onCommit={(v) => boxes.update(b.id, { [k]: v ?? 0 })}
                       />
                     </td>
                   ))}
                   <td>
-                    <input
-                      className="cell-input font-mono"
-                      inputMode="decimal"
-                      value={b.maxWeightOz ?? ''}
-                      placeholder="∞"
-                      onChange={(ev) =>
-                        boxes.update(b.id, {
-                          maxWeightOz: ev.target.value === '' ? null : num(ev.target.value),
-                        })
-                      }
+                    <NumCell
+                      value={b.maxWeightOz}
+                      nullable
+                      onCommit={(v) => boxes.update(b.id, { maxWeightOz: v })}
                     />
                   </td>
                   <td className="text-center">
@@ -260,6 +253,9 @@ export default function CatalogPage() {
           <span className="font-display text-3xl font-bold">{Math.round(fillFactor * 100)}%</span>
         </div>
       </Section>
+      <p className="eyebrow">
+        {t('autoSaved')} — {t('exportJson')} / {t('importJson')} ⇄
+      </p>
     </div>
   )
 }

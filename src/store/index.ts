@@ -65,7 +65,16 @@ export const useCatalog = create<CatalogState>()(
           const known = new Set(s.entries.map((e) => e.product.trim().toLowerCase()))
           const added = products
             .filter((p) => !known.has(p.trim().toLowerCase()))
-            .map((product) => ({ id: uid(), product, l: 0, w: 0, h: 0, weightOz: 0, note: '' }))
+            .map((product) => ({
+              id: uid(),
+              product,
+              l: 0,
+              w: 0,
+              h: 0,
+              weightOz: 0,
+              costEach: 0,
+              note: '',
+            }))
           return added.length ? { entries: [...s.entries, ...added] } : s
         }),
       importAll: (entries) => set({ entries }),

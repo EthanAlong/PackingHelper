@@ -1,5 +1,46 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import type { ServiceType } from '../lib/types'
+
+/**
+ * Numeric table cell that tolerates in-progress decimals ("8." while
+ * typing 8.75). Shows raw text while focused, commits the parsed value
+ * on every keystroke, snaps to the canonical number on blur.
+ */
+export function NumCell({
+  value,
+  onCommit,
+  nullable = false,
+  placeholder,
+  className = 'cell-input font-mono',
+}: {
+  value: number | null
+  onCommit: (v: number | null) => void
+  /** empty input commits null instead of 0 */
+  nullable?: boolean
+  placeholder?: string
+  className?: string
+}) {
+  const [text, setText] = useState<string | null>(null) // null = not editing
+  return (
+    <input
+      className={className}
+      inputMode="decimal"
+      value={text ?? (value || '')}
+      placeholder={placeholder ?? (nullable ? '∞' : '0')}
+      onFocus={() => setText(value ? String(value) : '')}
+      onChange={(e) => {
+        setText(e.target.value)
+        if (e.target.value.trim() === '') {
+          onCommit(nullable ? null : 0)
+          return
+        }
+        const n = parseFloat(e.target.value)
+        onCommit(Number.isFinite(n) && n >= 0 ? n : nullable ? null : 0)
+      }}
+      onBlur={() => setText(null)}
+    />
+  )
+}
 
 export function ServiceBadge({ service }: { service: ServiceType }) {
   const styles: Record<ServiceType, string> = {
