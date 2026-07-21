@@ -180,12 +180,16 @@ export function parseTextPages(pages: TextPage[]): ParseResult {
       if (!inItems) continue
 
       // --- footer: shipping service line (repeats on every page of a slip) ---
+      // Slips exported before labels are purchased have no tracking number
+      // ("USPS Priority Mail®"), so tracking is optional.
       const serviceRun = runs.find(
-        (r) => /USPS|UPS|FedEx|Mail|Ground|Priority/i.test(r) && RE_TRACKING.test(r),
+        (r) =>
+          /\b(USPS|UPS|FedEx)\b/i.test(r) &&
+          /Priority|Ground|Mail|First[- ]?Class/i.test(r),
       )
       if (serviceRun) {
         const trackMatch = serviceRun.match(RE_TRACKING)
-        current.tracking = trackMatch ? trackMatch[1] : ''
+        if (trackMatch) current.tracking = trackMatch[1]
         current.serviceRaw = serviceRun.replace(RE_TRACKING, '').replace(/#\s*$/, '').trim()
         current.service = classifyService(serviceRun)
         const weightRun = runs.map((r) => r.match(RE_WEIGHT)).find(Boolean)

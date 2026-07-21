@@ -48,6 +48,7 @@ const dict = {
   printSlips: { en: 'Print packing slips', zh: '打印随箱清单' },
   resetProgress: { en: 'Reset all progress', zh: '重置全部进度' },
   boxNone: { en: 'NO FIT', zh: '装不下' },
+  spentWord: { en: 'spent', zh: '消费' },
   boxMissingDims: { en: 'need dims', zh: '缺尺寸' },
   hideDone: { en: 'Hide finished', zh: '隐藏已完成' },
 

@@ -98,6 +98,11 @@ function OrderCard({
 
   const groups = groupItems(order.items)
   const itemCount = order.items.reduce((s, it) => s + it.qty, 0)
+  // single-item slips print no "N Items | $total" row — fall back to line subtotals
+  const spent =
+    order.declaredTotal >= 0
+      ? order.declaredTotal
+      : order.items.reduce((s, it) => s + (Number.isFinite(it.price) ? it.price : 0), 0)
   // map each item back to its progress key
   const keyOf = new Map(order.items.map((it, i) => [it, keys[i]]))
 
@@ -132,6 +137,12 @@ function OrderCard({
             <span className="font-mono text-sm text-ink-mut">
               {itemCount} {t('itemsWord')} · {order.weightOz} oz
             </span>
+            {spent > 0 && (
+              <span className="font-mono text-sm text-ink-mut">
+                {t('spentWord')}{' '}
+                <span className="font-bold text-accent">${spent.toFixed(2)}</span>
+              </span>
+            )}
             <span className="ml-auto flex gap-2">
               <Btn onClick={() => setMany(hash, keys, !done)}>
                 {done ? t('uncheckAll') : t('checkAll')}
